@@ -1,0 +1,23 @@
+version: v1
+plugins:
+  - plugin: buf.build/protocolbuffers/go:v1.34.2
+    out: gen/go
+    opt: paths=source_relative
+
+  - plugin: buf.build/grpc/go:v1.3.0
+    out: gen/go
+    opt: paths=source_relative
+
+  - plugin: buf.build/bufbuild/esbuild:v0.0.3
+    out: gen/ts
+    opt:
+      - import_extension=js
+      - binary
+      - json
+      - encoding
+      - rpc=grpc-web
+
+  - plugin: buf.build/bufbuild/connect-web:v0.3.0
+    out: gen/ts
+    opt:
+      - import_extension=js

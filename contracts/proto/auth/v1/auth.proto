@@ -1,0 +1,187 @@
+syntax = "proto3";
+
+package auth.v1;
+
+option go_package = "github.com/podcast-platform/contracts/gen/go/auth/v1;authv1";
+option java_package = "com.podcast.auth.v1";
+
+import "google/type/datetime.proto";
+import "common/v1/pagination.proto";
+
+// AuthService provides authentication and authorization operations.
+service AuthService {
+  // Register a new user
+  rpc Register(RegisterRequest) returns (AuthResponse);
+  
+  // Login with email/password
+  rpc Login(LoginRequest) returns (AuthResponse);
+  
+  // Refresh access token using refresh token
+  rpc RefreshToken(RefreshRequest) returns (AuthResponse);
+  
+  // Validate a token (internal use)
+  rpc ValidateToken(ValidateRequest) returns (ValidateResponse);
+  
+  // Check if user has specific permission
+  rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse);
+  
+  // Get user profile (internal use)
+  rpc GetUser(GetUserRequest) returns (User);
+  
+  // Update user profile (internal use)
+  rpc UpdateUser(UpdateUserRequest) returns (User);
+  
+  // Change password
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  
+  // Request password reset
+  rpc RequestPasswordReset(PasswordResetRequest) returns (PasswordResetResponse);
+  
+  // Confirm password reset with token
+  rpc ConfirmPasswordReset(ConfirmResetRequest) returns (AuthResponse);
+  
+  // Verify email with token
+  rpc VerifyEmail(VerifyEmailRequest) returns (VerifyEmailResponse);
+}
+
+// User represents a user in the system
+message User {
+  string id = 1;
+  string email = 2;
+  string display_name = 3;
+  string avatar_url = 4;
+  UserRole role = 5;
+  bool is_verified = 6;
+  google.type.DateTime created_at = 7;
+  google.type.DateTime updated_at = 8;
+}
+
+// UserRole defines the role of a user
+enum UserRole {
+  USER_ROLE_UNSPECIFIED = 0;
+  LISTENER = 1;
+  PREMIUM = 2;
+  CREATOR = 3;
+  MODERATOR = 4;
+  ADMIN = 5;
+  SUPPORT = 6;
+}
+
+// RegisterRequest is sent to register a new user
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string display_name = 3;
+  string invite_code = 4;  // Optional invite code
+}
+
+// LoginRequest is sent to login
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+  bool remember_me = 3;
+}
+
+// AuthResponse returns authentication tokens
+message AuthResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 access_token_expires_in = 3;  // seconds
+  User user = 4;
+}
+
+// RefreshRequest is sent to refresh tokens
+message RefreshRequest {
+  string refresh_token = 1;
+}
+
+// ValidateRequest validates a token
+message ValidateRequest {
+  string token = 1;
+  string required_permission = 2;  // Optional permission check
+}
+
+// ValidateResponse returns token validity
+message ValidateResponse {
+  bool is_valid = 1;
+  User user = 2;
+  repeated string permissions = 3;
+}
+
+// CheckPermissionRequest checks a specific permission
+message CheckPermissionRequest {
+  string user_id = 1;
+  string permission = 2;
+}
+
+// CheckPermissionResponse returns permission check result
+message CheckPermissionResponse {
+  bool has_permission = 1;
+}
+
+// GetUserRequest gets a user by ID
+message GetUserRequest {
+  string user_id = 1;
+}
+
+// UpdateUserRequest updates a user
+message UpdateUserRequest {
+  string user_id = 1;
+  optional string display_name = 2;
+  optional string avatar_url = 3;
+}
+
+// ChangePasswordRequest changes user password
+message ChangePasswordRequest {
+  string user_id = 1;
+  string old_password = 2;
+  string new_password = 3;
+}
+
+// ChangePasswordResponse returns password change result
+message ChangePasswordResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// PasswordResetRequest requests a password reset
+message PasswordResetRequest {
+  string email = 1;
+}
+
+// PasswordResetResponse returns password reset request result
+message PasswordResetResponse {
+  bool success = 1;
+  string message = 2;  // "If email exists, reset link sent"
+}
+
+// ConfirmResetRequest confirms password reset with token
+message ConfirmResetRequest {
+  string token = 1;
+  string new_password = 2;
+}
+
+// VerifyEmailRequest verifies email with token
+message VerifyEmailRequest {
+  string token = 1;
+}
+
+// VerifyEmailResponse returns email verification result
+message VerifyEmailResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// OAuthLoginRequest is sent for OAuth login
+message OAuthLoginRequest {
+  string provider = 1;  // google, apple, github
+  string code = 2;
+  string redirect_uri = 3;
+}
+
+// OAuthCallbackRequest handles OAuth callback
+message OAuthCallbackRequest {
+  string provider = 1;
+  string code = 2;
+  string state = 3;
+}

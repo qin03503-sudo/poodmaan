@@ -1,0 +1,186 @@
+syntax = "proto3";
+
+package user.library.v1;
+
+option go_package = "github.com/podcast-platform/contracts/gen/go/user/library/v1;libraryv1";
+option java_package = "com.podcast.user.library.v1";
+
+import "google/type/datetime.proto";
+
+// UserLibraryService manages user's podcast library.
+service UserLibraryService {
+  // Follow a podcast
+  rpc FollowPodcast(FollowPodcastRequest) returns (FollowPodcastResponse);
+  
+  // Unfollow a podcast
+  rpc UnfollowPodcast(UnfollowPodcastRequest) returns (UnfollowPodcastResponse);
+  
+  // Get followed podcasts
+  rpc ListFollowedPodcasts(ListFollowedPodcastsRequest) returns (ListFollowedPodcastsResponse);
+  
+  // Save an episode
+  rpc SaveEpisode(SaveEpisodeRequest) returns (SaveEpisodeResponse);
+  
+  // Unsave an episode
+  rpc UnsaveEpisode(UnsaveEpisodeRequest) returns (UnsaveEpisodeResponse);
+  
+  // Get saved episodes
+  rpc ListSavedEpisodes(ListSavedEpisodesRequest) returns (ListSavedEpisodesResponse);
+  
+  // Add episode to history
+  rpc RecordPlayback(RecordPlaybackRequest) returns (RecordPlaybackResponse);
+  
+  // Get playback history
+  rpc ListPlaybackHistory(ListPlaybackHistoryRequest) returns (ListPlaybackHistoryResponse);
+  
+  // Create playlist
+  rpc CreatePlaylist(CreatePlaylistRequest) returns (Playlist);
+  
+  // Get user playlists
+  rpc ListPlaylists(ListPlaylistsRequest) returns (ListPlaylistsResponse);
+  
+  // Add episode to playlist
+  rpc AddToPlaylist(AddToPlaylistRequest) returns (AddToPlaylistResponse);
+}
+
+message FollowPodcastRequest {
+  string user_id = 1;
+  string podcast_id = 2;
+}
+
+message FollowPodcastResponse {
+  bool success = 1;
+}
+
+message UnfollowPodcastRequest {
+  string user_id = 1;
+  string podcast_id = 2;
+}
+
+message UnfollowPodcastResponse {
+  bool success = 1;
+}
+
+message ListFollowedPodcastsRequest {
+  string user_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListFollowedPodcastsResponse {
+  repeated PodcastSummary podcasts = 1;
+  string next_page_token = 2;
+}
+
+message PodcastSummary {
+  string id = 1;
+  string title = 2;
+  string cover_image_url = 3;
+  int32 episode_count = 4;
+  google.type.DateTime followed_at = 5;
+}
+
+message SaveEpisodeRequest {
+  string user_id = 1;
+  string episode_id = 2;
+}
+
+message SaveEpisodeResponse {
+  bool success = 1;
+}
+
+message UnsaveEpisodeRequest {
+  string user_id = 1;
+  string episode_id = 2;
+}
+
+message UnsaveEpisodeResponse {
+  bool success = 1;
+}
+
+message ListSavedEpisodesRequest {
+  string user_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListSavedEpisodesResponse {
+  repeated EpisodeSummary episodes = 1;
+  string next_page_token = 2;
+}
+
+message EpisodeSummary {
+  string id = 1;
+  string title = 2;
+  string podcast_title = 3;
+  int32 duration_seconds = 4;
+  google.type.DateTime saved_at = 5;
+}
+
+message RecordPlaybackRequest {
+  string user_id = 1;
+  string episode_id = 2;
+  string podcast_id = 3;
+  int32 position_seconds = 4;
+  bool completed = 5;
+}
+
+message RecordPlaybackResponse {
+  bool success = 1;
+}
+
+message ListPlaybackHistoryRequest {
+  string user_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListPlaybackHistoryResponse {
+  repeated PlaybackRecord records = 1;
+  string next_page_token = 2;
+}
+
+message PlaybackRecord {
+  string episode_id = 1;
+  string podcast_id = 2;
+  int32 position_seconds = 3;
+  int32 duration_seconds = 4;
+  bool completed = 5;
+  int32 play_count = 6;
+  google.type.DateTime last_played_at = 7;
+}
+
+message CreatePlaylistRequest {
+  string user_id = 1;
+  string title = 2;
+  string description = 3;
+  bool is_public = 4;
+}
+
+message ListPlaylistsRequest {
+  string user_id = 1;
+}
+
+message ListPlaylistsResponse {
+  repeated Playlist playlists = 1;
+}
+
+message Playlist {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  bool is_public = 4;
+  int32 episode_count = 5;
+  google.type.DateTime created_at = 6;
+  google.type.DateTime updated_at = 7;
+}
+
+message AddToPlaylistRequest {
+  string playlist_id = 1;
+  string episode_id = 2;
+  int32 position = 3;  // Optional, defaults to end
+}
+
+message AddToPlaylistResponse {
+  bool success = 1;
+}
