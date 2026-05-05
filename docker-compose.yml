@@ -35,16 +35,16 @@ services:
       retries: 3
 
   deps:
-    image: node:22-alpine
+    build: .
     working_dir: /workspace
     volumes:
       - .:/workspace
       - node_modules:/workspace/node_modules
       - pnpm_store:/root/.local/share/pnpm/store
-    command: sh -lc "corepack enable pnpm && pnpm install --frozen-lockfile=false"
+    command: sh -lc "pnpm install --frozen-lockfile=false"
 
   creator-studio:
-    image: node:22-alpine
+    build: .
     container_name: podcast-creator-studio
     working_dir: /workspace
     environment:
@@ -73,10 +73,10 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
-    command: sh -lc "corepack enable pnpm && pnpm --filter @poodmaan/creator-studio dev"
+    command: sh -lc "pnpm --filter @poodmaan/creator-studio dev"
 
   web:
-    image: node:22-alpine
+    build: .
     container_name: podcast-web
     working_dir: /workspace
     environment:
@@ -92,7 +92,7 @@ services:
         condition: service_completed_successfully
       creator-studio:
         condition: service_started
-    command: sh -lc "corepack enable pnpm && pnpm --filter @poodmaan/web dev"
+    command: sh -lc "pnpm --filter @poodmaan/web dev"
 
 volumes:
   postgres_data:
