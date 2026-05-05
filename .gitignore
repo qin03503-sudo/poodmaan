@@ -11,14 +11,16 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# Node modules
+# Package manager artifacts
 node_modules/
-pnpm-lock.yaml
+.pnpm-store/
 package-lock.json
 yarn.lock
 
 # Build outputs
 .next/
+apps/*/.next/
+apps/*/out/
 out/
 dist/
 build/
@@ -36,11 +38,14 @@ build/
 .env
 .env.local
 .env.*.local
+apps/*/.env.local
+packages/*/.env.local
 
 # Logs
 logs/
 *.log
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
@@ -56,12 +61,14 @@ coverage/
 # Dependency directories
 vendor/
 
-# Go workspace file
+# Go workspace and local module files
 go.work
+go.work.sum
 
 # Generated files
 gen/
 generated/
+coverage/
 *.gen.go
 *.pb.go
 *.pb.ts
@@ -96,6 +103,7 @@ ehthumbs.db
 tmp/
 temp/
 *.tmp
+.cache/
 
 # Database dumps
 *.sql.gz

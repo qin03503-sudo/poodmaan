@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@poodmaan/ui/*": ["../../packages/ui/src/*"]
+    }
+  }
+}

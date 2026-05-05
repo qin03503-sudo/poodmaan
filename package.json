@@ -1,0 +1,14 @@
+{
+  "name": "poodmaan",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.3",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @poodmaan/web --filter @poodmaan/creator-studio dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint"
+  },
+  "devDependencies": {
+    "shadcn": "4.6.0"
+  }
+}

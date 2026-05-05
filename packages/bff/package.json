@@ -1,0 +1,13 @@
+{
+  "name": "@poodmaan/bff",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "dependencies": {
+    "minio": "^8.0.6",
+    "pg": "^8.16.3"
+  }
+}

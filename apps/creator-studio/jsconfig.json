@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@poodmaan/bff": ["../../packages/bff/src/index.js"],
+      "@poodmaan/ui/*": ["../../packages/ui/src/*"]
+    }
+  }
+}
